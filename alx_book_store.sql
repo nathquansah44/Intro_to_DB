@@ -1,86 +1,47 @@
+-- Create the database and use it
 CREATE DATABASE IF NOT EXISTS alx_book_store;
 USE alx_book_store;
 
--- Create Authors table
-CREATE TABLE IF NOT EXISTS AUTHORS (
-    AUTHOR_ID INT AUTO_INCREMENT PRIMARY KEY,
-    AUTHOR_NAME VARCHAR(215) NOT NULL
+-- Table: authors
+CREATE TABLE IF NOT EXISTS authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    author_name VARCHAR(255) NOT NULL
 );
 
--- Create Books table
-CREATE TABLE IF NOT EXISTS BOOKS (
-    BOOK_ID INT AUTO_INCREMENT PRIMARY KEY,
-    TITLE VARCHAR(130) NOT NULL,
-    AUTHOR_ID INT NOT NULL,
-    PRICE DOUBLE NOT NULL,
-    PUBLICATION_DATE DATE,
-    CONSTRAINT FK_BOOK_AUTHOR FOREIGN KEY (AUTHOR_ID)
-        REFERENCES AUTHORS(AUTHOR_ID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+-- Table: books
+CREATE TABLE IF NOT EXISTS books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(130) NOT NULL,
+    author_id INT NOT NULL,
+    price DOUBLE NOT NULL,
+    publication_date DATE,
+    FOREIGN KEY (author_id) REFERENCES authors(author_id)
 );
 
--- Create Customers table
-CREATE TABLE IF NOT EXISTS CUSTOMERS (
-    CUSTOMER_ID INT AUTO_INCREMENT PRIMARY KEY,
-    CUSTOMER_NAME VARCHAR(215) NOT NULL,
-    EMAIL VARCHAR(215),
-    ADDRESS TEXT
+-- Table: customers
+CREATE TABLE IF NOT EXISTS customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(50)
 );
 
--- Create Orders table
-CREATE TABLE IF NOT EXISTS ORDERS (
-    ORDER_ID INT AUTO_INCREMENT PRIMARY KEY,
-    CUSTOMER_ID INT NOT NULL,
-    ORDER_DATE DATE,
-    CONSTRAINT FK_ORDER_CUSTOMER FOREIGN KEY (CUSTOMER_ID)
-        REFERENCES CUSTOMERS(CUSTOMER_ID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+-- Table: orders
+CREATE TABLE IF NOT EXISTS orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_date DATE NOT NULL,
+    total_amount DOUBLE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
 
--- Create Order_Details table
-CREATE TABLE IF NOT EXISTS ORDER_DETAILS (
-    ORDERDETAILID INT AUTO_INCREMENT PRIMARY KEY,
-    ORDER_ID INT NOT NULL,
-    BOOK_ID INT NOT NULL,
-    QUANTITY DOUBLE NOT NULL,
-    CONSTRAINT FK_ORDERDETAIL_ORDER FOREIGN KEY (ORDER_ID)
-        REFERENCES ORDERS(ORDER_ID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT FK_ORDERDETAIL_BOOK FOREIGN KEY (BOOK_ID)
-        REFERENCES BOOKS(BOOK_ID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+-- Table: order_details
+CREATE TABLE IF NOT EXISTS order_details (
+    order_detail_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    book_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DOUBLE NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
-
--- Optional: Sample data for testing
-
--- Insert authors
-INSERT INTO AUTHORS (AUTHOR_NAME) VALUES 
-('George Orwell'),
-('J.K. Rowling'),
-('Aldous Huxley');
-
--- Insert books
-INSERT INTO BOOKS (TITLE, AUTHOR_ID, PRICE, PUBLICATION_DATE) VALUES
-('1984', 1, 15.99, '1949-06-08'),
-('Harry Potter and the Sorcerer''s Stone', 2, 12.99, '1997-06-26'),
-('Brave New World', 3, 14.50, '1932-08-31');
-
--- Insert customers
-INSERT INTO CUSTOMERS (CUSTOMER_NAME, EMAIL, ADDRESS) VALUES
-('Alice Smith', 'alice@example.com', '123 Maple Street'),
-('Bob Johnson', 'bob@example.com', '456 Oak Avenue');
-
--- Insert orders
-INSERT INTO ORDERS (CUSTOMER_ID, ORDER_DATE) VALUES
-(1, '2025-12-10'),
-(2, '2025-12-11');
-
--- Insert order details
-INSERT INTO ORDER_DETAILS (ORDER_ID, BOOK_ID, QUANTITY) VALUES
-(1, 1, 2),
-(1, 3, 1),
-(2, 2, 1);
