@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS ALX_BOOK_STORE;
 
 -- Use the database
-USE ALX_BOOK_STORE;
+USE Alx_book_store;
 
 -- Create Authors table
 CREATE TABLE IF NOT EXISTS AUTHORS (
